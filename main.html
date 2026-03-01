@@ -1,0 +1,1088 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeuroNote EHR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream: #f5f1ea;
+  --cream2: #ede8df;
+  --cream3: #e4ddd1;
+  --paper: #faf8f4;
+  --white: #ffffff;
+  --ink: #1a1612;
+  --ink2: #3d342a;
+  --ink3: #6b5f52;
+  --ink4: #a0917f;
+  --ink5: #c8bfb0;
+  --rule: #d9d1c4;
+  --teal: #1a6b6b;
+  --teal-lt: #e8f4f4;
+  --teal-mid: #2d8a8a;
+  --amber: #b8600a;
+  --amber-lt: #fdf3e8;
+  --rose: #a0323c;
+  --rose-lt: #faecee;
+  --sage: #4a7c59;
+  --sage-lt: #edf5f0;
+  --sidebar-w: 260px;
+  --nn-w: 360px;
+}
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background: var(--ink);
+  color: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  height: 52px;
+  flex-shrink: 0;
+  border-bottom: 3px solid var(--teal);
+}
+
+.logo {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.logo em { color: var(--teal-mid); font-style: italic; }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: 12px;
+  color: var(--ink4);
+  font-family: 'Open Sans', sans-serif;
+}
+
+.header-right strong { color: var(--cream); font-weight: 500; }
+
+.app-body { display: flex; flex: 1; overflow: hidden; }
+
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--ink2);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.sidebar-top {
+  padding: 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.sidebar-label {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 10px;
+}
+
+.search {
+  width: 100%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  padding: 7px 10px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  color: var(--cream);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.search::placeholder { color: var(--ink4); }
+.search:focus { border-color: var(--teal-mid); }
+
+.patient-list { flex: 1; overflow-y: auto; padding: 6px 0; }
+.patient-list::-webkit-scrollbar { width: 3px; }
+.patient-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+
+.pt-row {
+  padding: 11px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.12s;
+  position: relative;
+}
+
+.pt-row::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: transparent;
+  transition: background 0.12s;
+}
+
+.pt-row:hover { background: rgba(255,255,255,0.04); }
+.pt-row:hover::before { background: rgba(255,255,255,0.15); }
+.pt-row.active { background: rgba(26,107,107,0.2); }
+.pt-row.active::before { background: var(--teal-mid); }
+
+.pt-name {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cream);
+  margin-bottom: 3px;
+}
+
+.pt-sub {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 10px;
+  color: var(--ink4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.risk-pill {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-family: 'Open Sans', sans-serif;
+  text-transform: uppercase;
+}
+
+.rp-high { background: rgba(160,50,60,0.3); color: #f0a0a8; }
+.rp-mod  { background: rgba(184,96,10,0.3); color: #f0c080; }
+.rp-low  { background: rgba(74,124,89,0.3); color: #90c8a0; }
+.rp-none { background: rgba(255,255,255,0.06); color: var(--ink4); }
+
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--cream); }
+
+.empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--ink5);
+}
+
+.empty-glyph {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 64px;
+  opacity: 0.2;
+  font-style: italic;
+  line-height: 1;
+}
+
+.empty p { font-size: 14px; font-style: italic; }
+
+.record { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+.record.on { display: flex; }
+
+.rec-head {
+  background: var(--white);
+  border-bottom: 2px solid var(--rule);
+  padding: 18px 28px 14px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.rec-name {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.rec-chips {
+  display: flex;
+  gap: 0;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+.rec-chips span { margin-right: 14px; }
+.rec-chips span::before { content: '· '; opacity: 0.4; margin-right: 4px; }
+.rec-chips span:first-child::before { display: none; }
+
+.rec-head-actions { display: flex; gap: 8px; }
+
+.btn-sm {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px;
+  padding: 7px 14px;
+  border-radius: 3px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink3);
+  cursor: pointer;
+  transition: all 0.12s;
+  letter-spacing: 0.2px;
+}
+
+.btn-sm:hover { background: var(--cream2); color: var(--ink2); }
+
+.tabs-row {
+  background: var(--white);
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  padding: 0 28px;
+  flex-shrink: 0;
+}
+
+.tab {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--ink4);
+  padding: 10px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.12s;
+}
+
+.tab:hover { color: var(--ink2); }
+.tab.on { color: var(--teal); border-bottom-color: var(--teal); }
+
+.tab-content { flex: 1; overflow: hidden; display: flex; }
+
+.tab-panel {
+  display: none;
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px;
+}
+
+.tab-panel::-webkit-scrollbar { width: 4px; }
+.tab-panel::-webkit-scrollbar-thumb { background: var(--ink5); border-radius: 2px; }
+.tab-panel.on { display: block; }
+
+.panel-section {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink2);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+.demo-card {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.demo-card.full { grid-column: 1/-1; }
+
+.demo-card-head {
+  background: var(--cream);
+  border-bottom: 1px solid var(--rule);
+  padding: 8px 14px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink4);
+}
+
+.demo-row {
+  display: flex;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--cream2);
+  font-size: 13px;
+}
+
+.demo-row:last-child { border-bottom: none; }
+.demo-key { color: var(--ink4); width: 120px; flex-shrink: 0; font-size: 12px; }
+.demo-val { color: var(--ink); font-weight: 500; }
+
+.dx-item {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--rule);
+  border-radius: 0 4px 4px 0;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dx-item.primary   { border-left-color: var(--teal); }
+.dx-item.secondary { border-left-color: var(--amber); }
+.dx-item.resolved  { border-left-color: var(--ink5); opacity: 0.6; }
+
+.dx-name { font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 2px; }
+.dx-date { font-family: 'Open Sans', sans-serif; font-size: 11px; color: var(--ink4); }
+.dx-code {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  color: var(--ink4);
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  padding: 3px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.med-item {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 13px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.med-name { font-weight: 600; font-size: 14px; color: var(--ink); }
+.med-detail { font-family: 'Open Sans', sans-serif; font-size: 11px; color: var(--ink4); margin-top: 3px; }
+
+.med-active {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: 2px;
+  background: var(--sage-lt);
+  color: var(--sage);
+  border: 1px solid #c0dfc8;
+  white-space: nowrap;
+}
+
+.note-item {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.note-head {
+  background: var(--cream);
+  border-bottom: 1px solid var(--rule);
+  padding: 9px 16px;
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px;
+}
+
+.note-date { color: var(--ink3); }
+.note-auth { color: var(--teal); }
+.note-body { padding: 16px; font-size: 13.5px; line-height: 1.8; color: var(--ink2); }
+
+/* ── NeuroNote Panel ── */
+.nn-panel {
+  width: var(--nn-w);
+  border-left: 2px solid var(--teal);
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.nn-head {
+  background: var(--teal);
+  padding: 14px 20px;
+  flex-shrink: 0;
+}
+
+.nn-head-top { display: flex; align-items: center; justify-content: space-between; }
+
+.nn-title {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.2px;
+}
+
+.nn-title em { font-style: italic; opacity: 0.8; }
+
+.nn-badge {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 9px;
+  letter-spacing: 1px;
+  background: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.8);
+  padding: 2px 7px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.nn-sub {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 10px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 5px;
+}
+
+.nn-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.nn-body::-webkit-scrollbar { width: 3px; }
+.nn-body::-webkit-scrollbar-thumb { background: var(--rule); }
+
+.nn-idle {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.nn-idle-glyph {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 52px;
+  font-style: italic;
+  color: var(--ink5);
+  line-height: 1;
+}
+
+.nn-idle-text {
+  font-size: 13px;
+  color: var(--ink4);
+  line-height: 1.7;
+  max-width: 260px;
+}
+
+.btn-run {
+  margin-top: 4px;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  padding: 11px 28px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+  width: 100%;
+  text-transform: uppercase;
+}
+
+.btn-run:hover { background: var(--teal-mid); }
+.btn-run:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.nn-loading {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.nn-loading.on { display: flex; }
+
+.loader-ring {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--cream2);
+  border-top-color: var(--teal);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.load-label { font-family: 'Open Sans', sans-serif; font-size: 11px; color: var(--ink3); }
+.load-step { font-family: 'Open Sans', sans-serif; font-size: 10px; color: var(--ink5); }
+
+.nn-result { display: none; }
+.nn-result.on { display: block; }
+
+.result-score-block {
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.score-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+}
+
+.score-banner.high { background: var(--rose-lt); border-bottom: 1px solid #f0c0c5; }
+.score-banner.mod  { background: var(--amber-lt); border-bottom: 1px solid #f0d0a0; }
+.score-banner.low  { background: var(--sage-lt); border-bottom: 1px solid #b0d8b8; }
+
+.score-label {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.score-banner.high .score-label { color: var(--rose); }
+.score-banner.mod  .score-label { color: var(--amber); }
+.score-banner.low  .score-label { color: var(--sage); }
+
+.score-level {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.score-banner.high .score-level { color: var(--rose); }
+.score-banner.mod  .score-level { color: var(--amber); }
+.score-banner.low  .score-level { color: var(--sage); }
+
+.score-number {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.score-banner.high .score-number { color: var(--rose); }
+.score-banner.mod  .score-number { color: var(--amber); }
+.score-banner.low  .score-number { color: var(--sage); }
+
+.score-denom { font-size: 16px; opacity: 0.4; }
+
+.nn-section-label {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 8px;
+}
+
+.factors-box {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--ink2);
+  margin-bottom: 16px;
+  white-space: pre-wrap;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.rec-box {
+  background: var(--teal-lt);
+  border: 1px solid #b8d8d8;
+  border-left: 3px solid var(--teal);
+  border-radius: 0 4px 4px 0;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.rec-label {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 7px;
+}
+
+.rec-text { font-size: 13px; line-height: 1.75; color: var(--ink2); }
+
+.rerun-btn {
+  width: 100%;
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 9px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px;
+  color: var(--ink4);
+  cursor: pointer;
+  transition: all 0.12s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rerun-btn:hover { background: var(--cream); color: var(--ink2); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up { animation: fadeUp 0.3s ease forwards; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Neuro<em>Note</em></div>
+  <div class="header-right">
+    <span>St. Clearwater Medical Center</span>
+    <span><strong>Dr. Sarah Okonkwo, MD</strong> &nbsp;·&nbsp; Neurology</span>
+    <span>Fri, Feb 28 2026 &nbsp;·&nbsp; Morning Clinic</span>
+  </div>
+</header>
+
+<div class="app-body">
+  <div class="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-label">Today's Patients</div>
+      <input class="search" type="text" placeholder="Search…" id="searchInput" oninput="filterPts()">
+    </div>
+    <div class="patient-list" id="ptList"></div>
+  </div>
+
+  <div class="main">
+    <div class="empty" id="emptyState">
+      <div class="empty-glyph">EHR</div>
+      <p>Select a patient to open their record</p>
+    </div>
+
+    <div class="record" id="recordEl">
+      <div class="rec-head">
+        <div>
+          <div class="rec-name" id="recName">—</div>
+          <div class="rec-chips" id="recChips"></div>
+        </div>
+        <div class="rec-head-actions">
+          <button class="btn-sm">+ New Note</button>
+          <button class="btn-sm">Print Summary</button>
+        </div>
+      </div>
+
+      <div class="tabs-row">
+        <div class="tab on"  onclick="switchTab(this,'demo')">Demographics</div>
+        <div class="tab"     onclick="switchTab(this,'dx')">Diagnoses</div>
+        <div class="tab"     onclick="switchTab(this,'meds')">Medications</div>
+        <div class="tab"     onclick="switchTab(this,'notes')">Progress Notes</div>
+      </div>
+
+      <div class="tab-content">
+        <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
+          <div class="tab-panel on" id="tp-demo"><div class="demo-grid" id="demoGrid"></div></div>
+          <div class="tab-panel" id="tp-dx"><div class="panel-section">Problem List</div><div id="dxList"></div></div>
+          <div class="tab-panel" id="tp-meds"><div class="panel-section">Active Medications</div><div id="medList"></div></div>
+          <div class="tab-panel" id="tp-notes"><div class="panel-section">Clinical Notes</div><div id="noteList"></div></div>
+        </div>
+
+        <!-- NeuroNote Plugin -->
+        <div class="nn-panel">
+          <div class="nn-head">
+            <div class="nn-head-top">
+              <div class="nn-title">Neuro<em>Note</em> AI</div>
+              <div class="nn-badge">v2.1</div>
+            </div>
+            <div class="nn-sub">Dementia Risk Prediction Plugin</div>
+          </div>
+          <div class="nn-body" id="nnBody">
+            <div class="nn-idle" id="nnIdle">
+              <div class="nn-idle-glyph">Rₓ</div>
+              <div class="nn-idle-text">Analyze this patient's complete EHR history to generate a dementia risk score, key contributing factors, and clinical recommendation.</div>
+              <button class="btn-run" id="runBtn" onclick="runAnalysis()">Run Analysis</button>
+            </div>
+            <div class="nn-loading" id="nnLoad">
+              <div class="loader-ring"></div>
+              <div class="load-label">Analyzing patient record</div>
+              <div class="load-step" id="loadStep">Parsing clinical notes…</div>
+            </div>
+            <div class="nn-result" id="nnResult"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PATIENTS = [
+  {
+    id:1, name:"Margaret H. Collins", dob:"1944-03-12", age:81, sex:"Female",
+    mrn:"MRN-004821", appt:"8:00 AM", riskPrior:"high",
+    phone:"(614) 555-0182", address:"114 Birchwood Lane, Columbus, OH 43201",
+    insurance:"Medicare Part B", pcp:"Dr. James Rutherford, MD",
+    allergies:"Penicillin (rash), Codeine (nausea)",
+    diagnoses:[
+      {name:"Mild Cognitive Impairment (MCI)",code:"G31.84",date:"Mar 2022",type:"primary"},
+      {name:"Type 2 Diabetes Mellitus",code:"E11.9",date:"Jan 2015",type:"secondary"},
+      {name:"Hypertension, Essential",code:"I10",date:"Jun 2012",type:"secondary"},
+      {name:"Major Depressive Disorder, Recurrent",code:"F33.1",date:"Nov 2019",type:"secondary"},
+      {name:"Hypothyroidism",code:"E03.9",date:"Apr 2017",type:"secondary"},
+      {name:"Osteoarthritis, Bilateral Knee",code:"M17.11",date:"Aug 2018",type:"resolved"},
+    ],
+    medications:[
+      {name:"Donepezil",dose:"10 mg",freq:"Once daily at bedtime",since:"Apr 2022"},
+      {name:"Metformin",dose:"500 mg",freq:"Twice daily with meals",since:"Jan 2015"},
+      {name:"Lisinopril",dose:"10 mg",freq:"Once daily",since:"Jun 2012"},
+      {name:"Sertraline",dose:"50 mg",freq:"Once daily in morning",since:"Dec 2019"},
+      {name:"Levothyroxine",dose:"75 mcg",freq:"Once daily, fasting",since:"Apr 2017"},
+      {name:"Atorvastatin",dose:"20 mg",freq:"Once daily at bedtime",since:"Feb 2020"},
+    ],
+    notes:[
+      {date:"Dec 10, 2025",provider:"Dr. S. Okonkwo",body:"Patient presents for 6-month neurology follow-up. MMSE score today 22/30 (down from 25 in June 2025). She reports increasing word-finding difficulty over the past 2 months and her daughter endorses episodes of getting lost while driving in familiar areas. Sleep remains disrupted; REM behavioral changes noted by spouse. Continuing donepezil. Referral placed for neuropsychological testing and repeat MRI brain with volumetrics. Family counseling initiated."},
+      {date:"Jun 5, 2025",provider:"Dr. S. Okonkwo",body:"Stable follow-up. MMSE 25/30, unchanged from last visit. Patient reports occasional forgetfulness but managing ADLs independently. No new neurological complaints. Labs reviewed — HbA1c 7.2%, TSH 2.1. Continue current regimen. Return in 6 months or sooner if changes noted."},
+      {date:"Mar 14, 2024",provider:"Dr. S. Okonkwo",body:"Annual cognitive assessment. MMSE 26/30. Patient endorses mild short-term memory lapses, particularly with names. Neurological exam unremarkable. MRI February 2024 shows mild hippocampal atrophy bilaterally, consistent with age-related change vs. early MCI. Discussed findings with patient and daughter. Initiated donepezil trial after shared decision-making."},
+    ],
+    analysis:{
+      score:78, level:"high",
+      factorsText:`• Mild Cognitive Impairment (Formal Dx, G31.84): MMSE declined 26→22 over 18 months — a 4-point drop strongly associated with 60–80% conversion risk to Alzheimer's-type dementia. Functional decline in navigation and word-finding confirms progression beyond normal aging.
+
+• Neuroimaging — Bilateral Hippocampal Atrophy: MRI (Feb 2024) demonstrates bilateral hippocampal volume loss, a primary structural biomarker for Alzheimer's pathology and one of the most reliable predictors of dementia conversion in MCI patients.
+
+• REM Sleep Behavior Disorder: Spouse-reported REM behavioral changes are a well-documented prodromal marker for Lewy body spectrum and Alzheimer's disease, substantially elevating risk.
+
+• Recurrent Major Depressive Disorder: Long-standing MDD is an independent risk factor for late-life dementia onset, likely mediated through neuroinflammatory and hippocampal volume reduction mechanisms.
+
+• Vascular Risk Burden: Concurrent T2DM (HbA1c 7.2%) and hypertension create additive cerebrovascular risk, contributing to possible mixed-etiology cognitive decline alongside the neurodegenerative picture.
+
+• Age (81): Non-modifiable primary risk factor. Incidence of Alzheimer's dementia approximately doubles every 5 years after age 65.`,
+      recommendation:"High-risk profile warrants expedited neuropsychological testing, repeat MRI with volumetric analysis, and referral to a memory disorders specialist. Consider amyloid PET imaging if available. Initiate advance care planning discussion with patient and family. Review driving safety given documented navigational disorientation."
+    }
+  },
+  {
+    id:2, name:"Thomas R. Beaumont", dob:"1952-07-28", age:73, sex:"Male",
+    mrn:"MRN-007340", appt:"9:15 AM", riskPrior:"mod",
+    phone:"(614) 555-0247", address:"832 Elm Street, Apt 4C, Columbus, OH 43209",
+    insurance:"UnitedHealth Medicare Advantage", pcp:"Dr. Lisa Park, MD",
+    allergies:"NKDA",
+    diagnoses:[
+      {name:"Hypertension, Essential",code:"I10",date:"Mar 2010",type:"primary"},
+      {name:"Hyperlipidemia",code:"E78.5",date:"Mar 2010",type:"secondary"},
+      {name:"Type 2 Diabetes Mellitus",code:"E11.9",date:"Sep 2016",type:"secondary"},
+      {name:"Sleep Apnea, Obstructive",code:"G47.33",date:"Jan 2021",type:"secondary"},
+    ],
+    medications:[
+      {name:"Amlodipine",dose:"5 mg",freq:"Once daily",since:"Mar 2010"},
+      {name:"Rosuvastatin",dose:"10 mg",freq:"Once daily at bedtime",since:"Mar 2010"},
+      {name:"Metformin",dose:"1000 mg",freq:"Twice daily",since:"Sep 2016"},
+      {name:"CPAP Therapy",dose:"N/A",freq:"Nightly (compliance poor)",since:"Feb 2021"},
+    ],
+    notes:[
+      {date:"Jan 20, 2026",provider:"Dr. S. Okonkwo",body:"New patient evaluation. Patient referred by PCP for subjective memory complaints. Reports increasing forgetfulness at work over past year — missing meetings, forgetting colleagues' names. MMSE 28/30 (2 points lost on recall). MoCA 25/30. Neurological exam normal. Sleep apnea on CPAP with reportedly poor compliance. Brain MRI and labs ordered. Return in 3 months with results."},
+      {date:"Oct 8, 2025",provider:"Dr. L. Park",body:"Annual wellness visit. BP 148/92 — elevated. HbA1c 7.8% — Jardiance added to regimen. Patient reports occasional brain fog and fatigue. Referred to Neurology for cognitive evaluation."},
+    ],
+    analysis:{
+      score:42, level:"mod",
+      factorsText:`• Poorly Controlled Vascular Risk Factors: BP 148/92 (target <130/80) combined with T2DM (HbA1c 7.8%) and hyperlipidemia constitutes a high vascular burden significantly associated with vascular dementia and mixed-etiology cognitive decline. This is the primary modifiable driver of risk in this patient.
+
+• Obstructive Sleep Apnea — Poor CPAP Compliance: OSA with inadequate treatment causes chronic nocturnal hypoxia and neuroinflammation. Poor CPAP adherence removes the primary protective intervention. OSA independently elevates dementia risk ~1.7x in longitudinal studies.
+
+• Subjective Cognitive Complaints with Borderline Screening Scores: MMSE 28/30 and MoCA 25/30 are within range but below age-expected norms. Work-related functional decline (missed meetings, name retrieval difficulty) represents a clinically meaningful change from baseline.
+
+• Age (73): Approaching the peak incidence threshold. Elevated monitoring is indicated even without structural or biomarker evidence of neurodegeneration at this time.`,
+      recommendation:"Moderate risk. Aggressively optimize vascular risk factors — BP target <130/80, HbA1c target <7%. Improve CPAP adherence urgently; consider auto-CPAP or BIPAP. Repeat cognitive assessment in 3 months alongside MRI results. Lifestyle counseling for aerobic exercise and Mediterranean diet."
+    }
+  },
+  {
+    id:3, name:"Rosalind K. Nakamura", dob:"1958-11-03", age:67, sex:"Female",
+    mrn:"MRN-009512", appt:"10:30 AM", riskPrior:"low",
+    phone:"(614) 555-0391", address:"45 Oak Ridge Drive, Dublin, OH 43016",
+    insurance:"Aetna PPO", pcp:"Dr. Michael Torres, MD",
+    allergies:"Sulfonamides (Stevens-Johnson, historical)",
+    diagnoses:[
+      {name:"Generalized Anxiety Disorder",code:"F41.1",date:"Aug 2014",type:"primary"},
+      {name:"Migraine with Aura",code:"G43.109",date:"Jun 2005",type:"secondary"},
+      {name:"BRCA1 Mutation Carrier",code:"Z15.01",date:"Feb 2020",type:"secondary"},
+    ],
+    medications:[
+      {name:"Escitalopram",dose:"10 mg",freq:"Once daily",since:"Aug 2014"},
+      {name:"Sumatriptan",dose:"50 mg",freq:"As needed for migraine",since:"Jun 2005"},
+      {name:"Magnesium Glycinate",dose:"400 mg",freq:"Once daily at night",since:"Jan 2022"},
+    ],
+    notes:[
+      {date:"Feb 1, 2026",provider:"Dr. S. Okonkwo",body:"Patient self-referred after reading about family history risk. Her mother had Alzheimer's dementia with onset around age 70. Patient is cognitively intact at baseline — MMSE 30/30, MoCA 28/30. No functional deficits. Discussed family history, genetic counseling options, and preventive lifestyle measures. Plan: repeat cognitive screen annually. No further workup indicated at this time."},
+    ],
+    analysis:{
+      score:18, level:"low",
+      factorsText:`• First-Degree Family History of Alzheimer's Dementia: Mother with Alzheimer's onset ~70 confers approximately 2–3x elevated lifetime risk compared to the general population. The APOE ε4 genotype (not yet tested) could modify this risk substantially if present.
+
+• Chronic Anxiety Disorder (GAD, Longstanding): Chronic psychological stress contributes modestly to cognitive risk through sustained cortisol elevation and hippocampal volume changes over time. Currently mitigated by pharmacotherapy (escitalopram).
+
+• Migraines with Aura: Emerging evidence suggests a marginal association between aura migraines and elevated cerebrovascular risk. Clinical significance in isolation is uncertain and low.
+
+• Current Cognitive Baseline — Fully Intact: MMSE 30/30 and MoCA 28/30 provide strong reassurance. No functional complaints. No structural imaging concerns documented. Risk at this time is driven entirely by non-modifiable family history, not current clinical findings.`,
+      recommendation:"Low risk. No intervention warranted currently. Recommend annual cognitive screening, aerobic exercise (150 min/week minimum), Mediterranean-style diet, and adequate sleep hygiene. Offer genetic counseling referral for APOE testing given strong family history. Reassess in 12 months or if new symptoms emerge."
+    }
+  },
+  {
+    id:4, name:"Vernon J. Adeyemi", dob:"1948-05-19", age:77, sex:"Male",
+    mrn:"MRN-003167", appt:"11:45 AM", riskPrior:"none",
+    phone:"(614) 555-0458", address:"1290 Walnut Ave, Columbus, OH 43222",
+    insurance:"Humana Gold Plus HMO", pcp:"Dr. Rachel Singh, MD",
+    allergies:"Latex (contact dermatitis)",
+    diagnoses:[
+      {name:"Parkinson's Disease",code:"G20",date:"Nov 2020",type:"primary"},
+      {name:"Hypertension",code:"I10",date:"Apr 2009",type:"secondary"},
+      {name:"Chronic Kidney Disease, Stage 3a",code:"N18.31",date:"Jun 2023",type:"secondary"},
+    ],
+    medications:[
+      {name:"Carbidopa-Levodopa",dose:"25-100 mg",freq:"Three times daily",since:"Nov 2020"},
+      {name:"Rasagiline",dose:"1 mg",freq:"Once daily",since:"Jan 2021"},
+      {name:"Amlodipine",dose:"10 mg",freq:"Once daily",since:"Apr 2009"},
+    ],
+    notes:[
+      {date:"Feb 14, 2026",provider:"Dr. S. Okonkwo",body:"PD follow-up. Motor control relatively stable on current regimen; mild bradykinesia noted on exam. Patient and wife report vivid, disturbing dreams and some confusion in the evenings — possible Lewy body overlap vs. medication effect. MMSE 24/30, down from 27 eighteen months ago. DaTSCAN ordered. Medication timing adjusted to minimize evening confusion. Cognitive trajectory discussed openly with family."},
+    ],
+    analysis:{
+      score:64, level:"mod",
+      factorsText:`• Parkinson's Disease (Primary Dx): PD patients face substantially elevated risk for Parkinson's Disease Dementia (PDD) and Lewy Body Dementia (LBD). Approximately 80% of PD patients will develop dementia within 20 years of motor symptom onset — this is the dominant risk signal in this patient.
+
+• Accelerating Cognitive Decline: MMSE declined 27→24 in 18 months — a rate significantly exceeding normal aging and suggesting early cognitive compromise beyond what would be expected from PD motor symptoms alone.
+
+• Probable REM Sleep Behavior Disorder: Vivid, disturbing dreams reported by patient and spouse. RBD is a hallmark prodromal feature of synucleinopathies including LBD, and its presence in the context of PD suggests possible Lewy body spectrum pathology.
+
+• Evening Confusion / Possible Sundowning: Confusion in the evenings is a recognized early neuropsychiatric feature of dementia with Lewy bodies. Medication-related contribution (dopaminergic) is possible but the pattern warrants close monitoring.
+
+• Hypertension: Adds modest additive vascular risk on top of the primary neurodegenerative picture.`,
+      recommendation:"Elevated risk in the context of PD. DaTSCAN has been ordered. Urgent referral to PD-specialist memory program and neuropsychological evaluation. Review all medications for anticholinergic burden. Discuss PDD/LBD risk trajectory openly with patient and family. Initiate advance care planning. Safety assessment for driving."
+    }
+  },
+  {
+    id:5, name:"Dorothy M. Szymanski", dob:"1956-01-30", age:70, sex:"Female",
+    mrn:"MRN-011488", appt:"1:00 PM", riskPrior:"none",
+    phone:"(614) 555-0561", address:"78 Sunfield Court, Westerville, OH 43081",
+    insurance:"SummaCare Medicare", pcp:"Dr. Aaron Levy, MD",
+    allergies:"NKDA",
+    diagnoses:[
+      {name:"Hypothyroidism",code:"E03.9",date:"Mar 2008",type:"primary"},
+      {name:"Vitamin B12 Deficiency",code:"E53.8",date:"Jan 2024",type:"secondary"},
+    ],
+    medications:[
+      {name:"Levothyroxine",dose:"100 mcg",freq:"Once daily, fasting",since:"Mar 2008"},
+      {name:"Cyanocobalamin (B12)",dose:"1000 mcg",freq:"Once monthly IM injection",since:"Jan 2024"},
+    ],
+    notes:[
+      {date:"Jan 15, 2026",provider:"Dr. S. Okonkwo",body:"New evaluation for cognitive concerns — fatigue, memory lapses, and slowed thinking over 8 months. TSH was elevated at 8.2 on PCP visit, now corrected to 2.8 after levothyroxine dose increase. B12 was critically low at 142 pg/mL — now receiving monthly IM injections. MMSE today 27/30. Following correction of metabolic causes, will repeat MMSE in 3 months. Cognitive symptoms likely largely attributable to reversible metabolic causes."},
+    ],
+    analysis:{
+      score:12, level:"low",
+      factorsText:`• Reversible Metabolic Etiologies — Under Active Treatment: Hypothyroidism (TSH 8.2 at presentation, now 2.8 post-adjustment) and critical B12 deficiency (142 pg/mL, now receiving monthly IM supplementation) are the most plausible primary causes of this patient's cognitive symptoms. Both are fully reversible and expected to produce significant improvement within 3–6 months.
+
+• Subjective Cognitive Complaints with Modest Objective Deficit: MMSE 27/30 is within normal limits but mildly below age expectation. Current level of deficit is consistent with metabolic etiology rather than primary neurodegeneration.
+
+• Age (70): Baseline monitoring warranted given age, but no structural or biomarker evidence of neurodegeneration has been identified.
+
+• No Primary Risk Factors Identified: No family history of dementia documented, no MCI diagnosis, no neuroimaging abnormalities, no significant vascular risk burden, no sleep disorder. Net baseline dementia risk is low.`,
+      recommendation:"Likely low dementia risk — current cognitive symptoms most plausibly explained by correctable metabolic etiologies (hypothyroidism + B12 deficiency). Repeat MMSE in 3 months post-treatment. If cognition normalizes, transition to routine annual screening. If decline persists despite metabolic correction, escalate workup with brain MRI and full neuropsychological testing."
+    }
+  }
+];
+
+let activePt = null;
+let analyzing = false;
+const STEPS = ['Parsing clinical notes…','Analyzing diagnosis history…','Reviewing medication profile…','Assessing cognitive indicators…','Evaluating risk factors…','Generating dementia risk model…','Finalizing report…'];
+
+function renderList(list) {
+  const el = document.getElementById('ptList');
+  el.innerHTML = '';
+  list.forEach(p => {
+    const d = document.createElement('div');
+    d.className = 'pt-row' + (p.id === activePt ? ' active' : '');
+    d.id = 'pt-' + p.id;
+    d.onclick = () => openPt(p.id);
+    const rL = {high:'HIGH',mod:'MOD',low:'LOW',none:'—'};
+    const rC = {high:'rp-high',mod:'rp-mod',low:'rp-low',none:'rp-none'};
+    d.innerHTML = `
+      <div class="pt-name">${p.name}</div>
+      <div class="pt-sub">
+        <span>${p.mrn} · ${p.age}y ${p.sex[0]}</span>
+        <span class="risk-pill ${rC[p.riskPrior]}">${rL[p.riskPrior]}</span>
+      </div>
+      <div style="font-family:'Open Sans',sans-serif;font-size:10px;color:var(--ink4);margin-top:3px;">${p.appt}</div>
+    `;
+    el.appendChild(d);
+  });
+}
+
+function filterPts() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  renderList(PATIENTS.filter(p => p.name.toLowerCase().includes(q) || p.mrn.toLowerCase().includes(q)));
+}
+
+function openPt(id) {
+  activePt = id;
+  const p = PATIENTS.find(x => x.id === id);
+  document.querySelectorAll('.pt-row').forEach(r => r.classList.remove('active'));
+  const row = document.getElementById('pt-' + id);
+  if (row) row.classList.add('active');
+
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('recordEl').classList.add('on');
+  document.getElementById('recName').textContent = p.name;
+  document.getElementById('recChips').innerHTML = `<span>${p.mrn}</span><span>DOB ${p.dob}</span><span>${p.age} yr · ${p.sex}</span><span>Appt ${p.appt}</span>`;
+
+  document.getElementById('demoGrid').innerHTML = `
+    <div class="demo-card">
+      <div class="demo-card-head">Personal</div>
+      ${dr('Full Name',p.name)}${dr('Date of Birth',p.dob)}${dr('Age',p.age+' yr')}${dr('Sex',p.sex)}${dr('Phone',p.phone)}
+    </div>
+    <div class="demo-card">
+      <div class="demo-card-head">Administrative</div>
+      ${dr('MRN',p.mrn)}${dr('Insurance',p.insurance)}${dr('Primary Care',p.pcp)}${dr("Today's Appt",p.appt)}
+    </div>
+    <div class="demo-card full">
+      <div class="demo-card-head">Clinical Details</div>
+      ${dr('Address',p.address)}${dr('Known Allergies',p.allergies)}
+    </div>
+  `;
+
+  document.getElementById('dxList').innerHTML = p.diagnoses.map(dx => `
+    <div class="dx-item ${dx.type}">
+      <div><div class="dx-name">${dx.name}</div><div class="dx-date">Onset: ${dx.date} · <span style="text-transform:capitalize">${dx.type}</span></div></div>
+      <div class="dx-code">${dx.code}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('medList').innerHTML = p.medications.map(m => `
+    <div class="med-item">
+      <div><div class="med-name">${m.name}</div><div class="med-detail">${m.dose} · ${m.freq} · Since ${m.since}</div></div>
+      <div class="med-active">Active</div>
+    </div>
+  `).join('');
+
+  document.getElementById('noteList').innerHTML = p.notes.map(n => `
+    <div class="note-item">
+      <div class="note-head"><span class="note-date">${n.date}</span><span class="note-auth">${n.provider}</span></div>
+      <div class="note-body">${n.body}</div>
+    </div>
+  `).join('');
+
+  resetNN();
+  switchTabById('demo');
+}
+
+function dr(k,v) {
+  return `<div class="demo-row"><div class="demo-key">${k}</div><div class="demo-val">${v}</div></div>`;
+}
+
+function switchTab(el, name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.tab-panel').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('tp-'+name).classList.add('on');
+}
+
+function switchTabById(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.tab-panel').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => {
+    if (t.getAttribute('onclick') && t.getAttribute('onclick').includes("'"+name+"'")) t.classList.add('on');
+  });
+  document.getElementById('tp-'+name).classList.add('on');
+}
+
+function resetNN() {
+  document.getElementById('nnIdle').style.display = 'flex';
+  document.getElementById('nnLoad').classList.remove('on');
+  document.getElementById('nnResult').classList.remove('on');
+  document.getElementById('nnResult').innerHTML = '';
+  document.getElementById('runBtn').disabled = false;
+  analyzing = false;
+}
+
+function runAnalysis() {
+  if (analyzing) return;
+  analyzing = true;
+  document.getElementById('runBtn').disabled = true;
+  document.getElementById('nnIdle').style.display = 'none';
+  document.getElementById('nnLoad').classList.add('on');
+
+  let s = 0;
+  const stepEl = document.getElementById('loadStep');
+  const iv = setInterval(() => { stepEl.textContent = STEPS[s++ % STEPS.length]; }, 430);
+
+  setTimeout(() => {
+    clearInterval(iv);
+    document.getElementById('nnLoad').classList.remove('on');
+    showResult();
+    analyzing = false;
+  }, 3200);
+}
+
+function showResult() {
+  const p = PATIENTS.find(x => x.id === activePt);
+  const a = p.analysis;
+  const lvlMap = {high:'High Risk',mod:'Moderate Risk',low:'Low Risk'};
+
+  const res = document.getElementById('nnResult');
+  res.innerHTML = `
+    <div class="result-score-block fade-up">
+      <div class="score-banner ${a.level}">
+        <div>
+          <div class="score-label">Dementia Risk Score</div>
+          <div class="score-level">${lvlMap[a.level]}</div>
+        </div>
+        <div class="score-number">${a.score}<span class="score-denom">/100</span></div>
+      </div>
+    </div>
+    <div class="nn-section-label">Contributing Risk Factors</div>
+    <div class="factors-box fade-up">${a.factorsText}</div>
+    <div class="nn-section-label">Clinical Recommendation</div>
+    <div class="rec-box fade-up">
+      <div class="rec-label">NeuroNote Recommendation</div>
+      <div class="rec-text">${a.recommendation}</div>
+    </div>
+    <button class="rerun-btn" onclick="resetNN()">↺ Rerun Analysis</button>
+  `;
+  res.classList.add('on');
+
+  const rL = {high:'HIGH',mod:'MOD',low:'LOW'};
+  const rC = {high:'rp-high',mod:'rp-mod',low:'rp-low'};
+  const ptRow = document.getElementById('pt-'+activePt);
+  if (ptRow) {
+    const pill = ptRow.querySelector('.risk-pill');
+    if (pill) { pill.className='risk-pill '+rC[a.level]; pill.textContent=rL[a.level]; }
+  }
+  p.riskPrior = a.level;
+}
+
+renderList(PATIENTS);
+</script>
+</body>
+</html>
