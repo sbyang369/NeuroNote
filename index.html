@@ -31,7 +31,7 @@
   --sage: #4a7c59;
   --sage-lt: #edf5f0;
   --sidebar-w: 260px;
-  --nn-w: 360px;
+  --nn-w: 380px;
 }
 
 html, body { height: 100%; overflow: hidden; }
@@ -74,13 +74,13 @@ header {
   gap: 28px;
   font-size: 12px;
   color: var(--ink4);
-  font-family: 'Open Sans', sans-serif;
 }
 
 .header-right strong { color: var(--cream); font-weight: 500; }
 
 .app-body { display: flex; flex: 1; overflow: hidden; }
 
+/* ── Sidebar ── */
 .sidebar {
   width: var(--sidebar-w);
   background: var(--ink2);
@@ -96,7 +96,6 @@ header {
 }
 
 .sidebar-label {
-  font-family: 'Open Sans', sans-serif;
   font-size: 9px;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -116,7 +115,6 @@ header {
   outline: none;
   transition: border-color 0.15s;
 }
-
 .search::placeholder { color: var(--ink4); }
 .search:focus { border-color: var(--teal-mid); }
 
@@ -131,7 +129,6 @@ header {
   transition: background 0.12s;
   position: relative;
 }
-
 .pt-row::before {
   content: '';
   position: absolute;
@@ -140,22 +137,13 @@ header {
   background: transparent;
   transition: background 0.12s;
 }
-
 .pt-row:hover { background: rgba(255,255,255,0.04); }
 .pt-row:hover::before { background: rgba(255,255,255,0.15); }
 .pt-row.active { background: rgba(26,107,107,0.2); }
 .pt-row.active::before { background: var(--teal-mid); }
 
-.pt-name {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--cream);
-  margin-bottom: 3px;
-}
-
+.pt-name { font-size: 13px; font-weight: 500; color: var(--cream); margin-bottom: 3px; }
 .pt-sub {
-  font-family: 'Open Sans', sans-serif;
   font-size: 10px;
   color: var(--ink4);
   display: flex;
@@ -169,15 +157,14 @@ header {
   letter-spacing: 0.5px;
   padding: 1px 6px;
   border-radius: 2px;
-  font-family: 'Open Sans', sans-serif;
   text-transform: uppercase;
 }
-
 .rp-high { background: rgba(160,50,60,0.3); color: #f0a0a8; }
-.rp-mod  { background: rgba(184,96,10,0.3); color: #f0c080; }
-.rp-low  { background: rgba(74,124,89,0.3); color: #90c8a0; }
+.rp-mod  { background: rgba(184,96,10,0.3);  color: #f0c080; }
+.rp-low  { background: rgba(74,124,89,0.3);  color: #90c8a0; }
 .rp-none { background: rgba(255,255,255,0.06); color: var(--ink4); }
 
+/* ── Main area ── */
 .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--cream); }
 
 .empty {
@@ -189,15 +176,7 @@ header {
   gap: 12px;
   color: var(--ink5);
 }
-
-.empty-glyph {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 64px;
-  opacity: 0.2;
-  font-style: italic;
-  line-height: 1;
-}
-
+.empty-glyph { font-size: 64px; opacity: 0.2; font-style: italic; line-height: 1; }
 .empty p { font-size: 14px; font-style: italic; }
 
 .record { display: none; flex: 1; flex-direction: column; overflow: hidden; }
@@ -212,33 +191,14 @@ header {
   align-items: flex-end;
   justify-content: space-between;
 }
-
-.rec-name {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  color: var(--ink);
-  line-height: 1;
-  margin-bottom: 5px;
-}
-
-.rec-chips {
-  display: flex;
-  gap: 0;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 11px;
-  color: var(--ink3);
-}
-
+.rec-name { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; color: var(--ink); line-height: 1; margin-bottom: 5px; }
+.rec-chips { display: flex; font-size: 11px; color: var(--ink3); }
 .rec-chips span { margin-right: 14px; }
 .rec-chips span::before { content: '· '; opacity: 0.4; margin-right: 4px; }
 .rec-chips span:first-child::before { display: none; }
-
 .rec-head-actions { display: flex; gap: 8px; }
 
 .btn-sm {
-  font-family: 'Open Sans', sans-serif;
   font-size: 11px;
   padding: 7px 14px;
   border-radius: 3px;
@@ -247,9 +207,8 @@ header {
   color: var(--ink3);
   cursor: pointer;
   transition: all 0.12s;
-  letter-spacing: 0.2px;
+  font-family: 'Open Sans', sans-serif;
 }
-
 .btn-sm:hover { background: var(--cream2); color: var(--ink2); }
 
 .tabs-row {
@@ -259,9 +218,7 @@ header {
   padding: 0 28px;
   flex-shrink: 0;
 }
-
 .tab {
-  font-family: 'Open Sans', sans-serif;
   font-size: 11px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -272,7 +229,6 @@ header {
   margin-bottom: -1px;
   transition: color 0.12s;
 }
-
 .tab:hover { color: var(--ink2); }
 .tab.on { color: var(--teal); border-bottom-color: var(--teal); }
 
@@ -284,50 +240,17 @@ header {
   overflow-y: auto;
   padding: 28px;
 }
-
 .tab-panel::-webkit-scrollbar { width: 4px; }
 .tab-panel::-webkit-scrollbar-thumb { background: var(--ink5); border-radius: 2px; }
 .tab-panel.on { display: block; }
 
-.panel-section {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--ink2);
-  margin-bottom: 16px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--rule);
-}
+.panel-section { font-size: 18px; font-weight: 600; color: var(--ink2); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
 
 .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-.demo-card {
-  background: var(--white);
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
+.demo-card { background: var(--white); border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
 .demo-card.full { grid-column: 1/-1; }
-
-.demo-card-head {
-  background: var(--cream);
-  border-bottom: 1px solid var(--rule);
-  padding: 8px 14px;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 9px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--ink4);
-}
-
-.demo-row {
-  display: flex;
-  padding: 9px 14px;
-  border-bottom: 1px solid var(--cream2);
-  font-size: 13px;
-}
-
+.demo-card-head { background: var(--cream); border-bottom: 1px solid var(--rule); padding: 8px 14px; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink4); }
+.demo-row { display: flex; padding: 9px 14px; border-bottom: 1px solid var(--cream2); font-size: 13px; }
 .demo-row:last-child { border-bottom: none; }
 .demo-key { color: var(--ink4); width: 120px; flex-shrink: 0; font-size: 12px; }
 .demo-val { color: var(--ink); font-weight: 500; }
@@ -343,72 +266,25 @@ header {
   justify-content: space-between;
   align-items: center;
 }
-
 .dx-item.primary   { border-left-color: var(--teal); }
 .dx-item.secondary { border-left-color: var(--amber); }
 .dx-item.resolved  { border-left-color: var(--ink5); opacity: 0.6; }
-
 .dx-name { font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 2px; }
-.dx-date { font-family: 'Open Sans', sans-serif; font-size: 11px; color: var(--ink4); }
-.dx-code {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 12px;
-  color: var(--ink4);
-  background: var(--cream);
-  border: 1px solid var(--rule);
-  padding: 3px 8px;
-  border-radius: 3px;
-  white-space: nowrap;
-}
+.dx-date { font-size: 11px; color: var(--ink4); }
+.dx-code { font-size: 12px; color: var(--ink4); background: var(--cream); border: 1px solid var(--rule); padding: 3px 8px; border-radius: 3px; white-space: nowrap; }
 
-.med-item {
-  background: var(--white);
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  padding: 13px 16px;
-  margin-bottom: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
+.med-item { background: var(--white); border: 1px solid var(--rule); border-radius: 4px; padding: 13px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
 .med-name { font-weight: 600; font-size: 14px; color: var(--ink); }
-.med-detail { font-family: 'Open Sans', sans-serif; font-size: 11px; color: var(--ink4); margin-top: 3px; }
+.med-detail { font-size: 11px; color: var(--ink4); margin-top: 3px; }
+.med-active { font-size: 10px; padding: 3px 9px; border-radius: 2px; background: var(--sage-lt); color: var(--sage); border: 1px solid #c0dfc8; white-space: nowrap; }
 
-.med-active {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 10px;
-  padding: 3px 9px;
-  border-radius: 2px;
-  background: var(--sage-lt);
-  color: var(--sage);
-  border: 1px solid #c0dfc8;
-  white-space: nowrap;
-}
-
-.note-item {
-  background: var(--white);
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  margin-bottom: 14px;
-  overflow: hidden;
-}
-
-.note-head {
-  background: var(--cream);
-  border-bottom: 1px solid var(--rule);
-  padding: 9px 16px;
-  display: flex;
-  justify-content: space-between;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 11px;
-}
-
+.note-item { background: var(--white); border: 1px solid var(--rule); border-radius: 4px; margin-bottom: 14px; overflow: hidden; }
+.note-head { background: var(--cream); border-bottom: 1px solid var(--rule); padding: 9px 16px; display: flex; justify-content: space-between; font-size: 11px; }
 .note-date { color: var(--ink3); }
 .note-auth { color: var(--teal); }
 .note-body { padding: 16px; font-size: 13.5px; line-height: 1.8; color: var(--ink2); }
 
-/* ── NeuroNote Panel ── */
+/* ══ NeuroNote Panel ══ */
 .nn-panel {
   width: var(--nn-w);
   border-left: 2px solid var(--teal);
@@ -424,133 +300,89 @@ header {
   padding: 14px 20px;
   flex-shrink: 0;
 }
-
 .nn-head-top { display: flex; align-items: center; justify-content: space-between; }
-
-.nn-title {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.2px;
-}
-
+.nn-title { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -0.2px; }
 .nn-title em { font-style: italic; opacity: 0.8; }
+.nn-badge { font-size: 9px; letter-spacing: 1px; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); padding: 2px 7px; border-radius: 2px; text-transform: uppercase; }
+.nn-sub { font-size: 10px; color: rgba(255,255,255,0.55); margin-top: 5px; }
 
-.nn-badge {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 9px;
-  letter-spacing: 1px;
-  background: rgba(255,255,255,0.15);
-  color: rgba(255,255,255,0.8);
-  padding: 2px 7px;
-  border-radius: 2px;
-  text-transform: uppercase;
-}
-
-.nn-sub {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 10px;
-  color: rgba(255,255,255,0.55);
-  margin-top: 5px;
-}
-
-.nn-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
+.nn-body { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; }
 .nn-body::-webkit-scrollbar { width: 3px; }
 .nn-body::-webkit-scrollbar-thumb { background: var(--rule); }
 
-.nn-loading {
-  display: none;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  text-align: center;
-}
-
+/* Loading state */
+.nn-loading { display: none; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center; }
 .nn-loading.on { display: flex; }
 
 .loader-ring {
-  width: 44px;
-  height: 44px;
+  width: 44px; height: 44px;
   border: 3px solid var(--cream2);
   border-top-color: var(--teal);
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
 }
-
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.load-label { font-family: 'Open Sans', sans-serif; font-size: 11px; color: var(--ink3); }
-.load-step { font-family: 'Open Sans', sans-serif; font-size: 10px; color: var(--ink5); }
+.load-label { font-size: 11px; color: var(--ink3); }
+.load-step  { font-size: 10px; color: var(--ink5); }
 
 .nn-result { display: none; }
 .nn-result.on { display: block; }
 
-/* Indicator banner — replaces the old score block */
+/* ── Result: indicator banner ── */
 .indicator-banner {
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   border: 1px solid var(--rule);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
 .indicator-inner {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 18px 20px;
+  padding: 20px;
 }
 
-.indicator-inner.detected {
-  background: var(--rose-lt);
-  border-bottom: 1px solid #f0c0c5;
-}
+.indicator-inner.detected { background: var(--rose-lt); }
+.indicator-inner.clear    { background: var(--sage-lt); }
 
-.indicator-inner.clear {
-  background: var(--sage-lt);
-  border-bottom: 1px solid #b0d8b8;
-}
-
-.indicator-icon {
-  font-size: 28px;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.indicator-text-block { flex: 1; }
+.indicator-icon { font-size: 30px; line-height: 1; flex-shrink: 0; }
 
 .indicator-label {
-  font-family: 'Open Sans', sans-serif;
   font-size: 9px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
-
 .indicator-inner.detected .indicator-label { color: var(--rose); }
 .indicator-inner.clear    .indicator-label { color: var(--sage); }
 
-.indicator-verdict {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.3;
-}
-
+.indicator-verdict { font-size: 15px; font-weight: 700; line-height: 1.35; }
 .indicator-inner.detected .indicator-verdict { color: var(--rose); }
 .indicator-inner.clear    .indicator-verdict { color: var(--sage); }
 
+/* ── Confidence meter (new) ── */
+.confidence-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px 14px;
+  background: var(--paper);
+  border-top: 1px solid var(--rule);
+}
+.conf-label { font-size: 10px; color: var(--ink4); white-space: nowrap; }
+.conf-bar-wrap { flex: 1; height: 6px; background: var(--cream2); border-radius: 3px; overflow: hidden; }
+.conf-bar { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+.detected .conf-bar { background: var(--rose); }
+.clear    .conf-bar { background: var(--sage); }
+.conf-pct { font-size: 11px; font-weight: 600; white-space: nowrap; }
+.indicator-inner.detected ~ .confidence-row .conf-pct { color: var(--rose); }
+.indicator-inner.clear    ~ .confidence-row .conf-pct { color: var(--sage); }
+
+/* ── Contributing factors ── */
 .nn-section-label {
-  font-family: 'Open Sans', sans-serif;
   font-size: 9px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -563,14 +395,15 @@ header {
   border: 1px solid var(--rule);
   border-radius: 4px;
   padding: 14px 16px;
-  font-size: 13px;
-  line-height: 1.75;
+  font-size: 12.5px;
+  line-height: 1.8;
   color: var(--ink2);
   margin-bottom: 16px;
   white-space: pre-wrap;
   font-family: 'Open Sans', sans-serif;
 }
 
+/* ── Recommendation ── */
 .rec-box {
   background: var(--teal-lt);
   border: 1px solid #b8d8d8;
@@ -579,17 +412,19 @@ header {
   padding: 14px 16px;
   margin-bottom: 16px;
 }
-
-.rec-label {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 9px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--teal);
-  margin-bottom: 7px;
-}
-
+.rec-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal); margin-bottom: 7px; }
 .rec-text { font-size: 13px; line-height: 1.75; color: var(--ink2); }
+
+/* ── Disclaimer ── */
+.disclaimer {
+  font-size: 10px;
+  color: var(--ink5);
+  line-height: 1.6;
+  border-top: 1px solid var(--rule);
+  padding-top: 12px;
+  margin-bottom: 14px;
+  font-style: italic;
+}
 
 .rerun-btn {
   width: 100%;
@@ -605,15 +440,15 @@ header {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-
 .rerun-btn:hover { background: var(--cream); color: var(--ink2); }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
-.fade-up { animation: fadeUp 0.3s ease forwards; }
+.fade-up { animation: fadeUp 0.35s ease forwards; }
+.fade-up-2 { animation: fadeUp 0.35s 0.1s ease both; }
+.fade-up-3 { animation: fadeUp 0.35s 0.2s ease both; }
 </style>
 </head>
 <body>
@@ -669,14 +504,14 @@ header {
           <div class="tab-panel" id="tp-notes"><div class="panel-section">Clinical Notes</div><div id="noteList"></div></div>
         </div>
 
-        <!-- NeuroNote Plugin -->
+        <!-- NeuroNote Plugin Panel -->
         <div class="nn-panel">
           <div class="nn-head">
             <div class="nn-head-top">
               <div class="nn-title">Neuro<em>Note</em> AI</div>
               <div class="nn-badge">v2.1</div>
             </div>
-            <div class="nn-sub">Dementia Risk Prediction Plugin</div>
+            <div class="nn-sub">Dementia Risk Prediction · Decision Support Tool</div>
           </div>
           <div class="nn-body" id="nnBody">
             <div class="nn-loading" id="nnLoad">
@@ -723,6 +558,7 @@ const PATIENTS = [
     ],
     analysis:{
       level:"detected",
+      confidence: 87,
       factorsText:`• Mild Cognitive Impairment (Formal Dx, G31.84): MMSE declined 26→22 over 18 months — a 4-point drop strongly associated with 60–80% conversion risk to Alzheimer's-type dementia. Functional decline in navigation and word-finding confirms progression beyond normal aging.
 
 • Neuroimaging — Bilateral Hippocampal Atrophy: MRI (Feb 2024) demonstrates bilateral hippocampal volume loss, a primary structural biomarker for Alzheimer's pathology and one of the most reliable predictors of dementia conversion in MCI patients.
@@ -761,6 +597,7 @@ const PATIENTS = [
     ],
     analysis:{
       level:"detected",
+      confidence: 71,
       factorsText:`• Poorly Controlled Vascular Risk Factors: BP 148/92 (target <130/80) combined with T2DM (HbA1c 7.8%) and hyperlipidemia constitutes a high vascular burden significantly associated with vascular dementia and mixed-etiology cognitive decline. This is the primary modifiable driver of risk in this patient.
 
 • Obstructive Sleep Apnea — Poor CPAP Compliance: OSA with inadequate treatment causes chronic nocturnal hypoxia and neuroinflammation. Poor CPAP adherence removes the primary protective intervention. OSA independently elevates dementia risk ~1.7x in longitudinal studies.
@@ -792,6 +629,7 @@ const PATIENTS = [
     ],
     analysis:{
       level:"clear",
+      confidence: 91,
       factorsText:`• First-Degree Family History of Alzheimer's Dementia: Mother with Alzheimer's onset ~70 confers approximately 2–3x elevated lifetime risk compared to the general population. The APOE ε4 genotype (not yet tested) could modify this risk substantially if present.
 
 • Chronic Anxiety Disorder (GAD, Longstanding): Chronic psychological stress contributes modestly to cognitive risk through sustained cortisol elevation and hippocampal volume changes over time. Currently mitigated by pharmacotherapy (escitalopram).
@@ -823,6 +661,7 @@ const PATIENTS = [
     ],
     analysis:{
       level:"detected",
+      confidence: 83,
       factorsText:`• Parkinson's Disease (Primary Dx): PD patients face substantially elevated risk for Parkinson's Disease Dementia (PDD) and Lewy Body Dementia (LBD). Approximately 80% of PD patients will develop dementia within 20 years of motor symptom onset — this is the dominant risk signal in this patient.
 
 • Accelerating Cognitive Decline: MMSE declined 27→24 in 18 months — a rate significantly exceeding normal aging and suggesting early cognitive compromise beyond what would be expected from PD motor symptoms alone.
@@ -854,6 +693,7 @@ const PATIENTS = [
     ],
     analysis:{
       level:"clear",
+      confidence: 88,
       factorsText:`• Reversible Metabolic Etiologies — Under Active Treatment: Hypothyroidism (TSH 8.2 at presentation, now 2.8 post-adjustment) and critical B12 deficiency (142 pg/mL, now receiving monthly IM supplementation) are the most plausible primary causes of this patient's cognitive symptoms. Both are fully reversible and expected to produce significant improvement within 3–6 months.
 
 • Subjective Cognitive Complaints with Modest Objective Deficit: MMSE 27/30 is within normal limits but mildly below age expectation. Current level of deficit is consistent with metabolic etiology rather than primary neurodegeneration.
@@ -867,7 +707,7 @@ const PATIENTS = [
 ];
 
 let activePt = null;
-const STEPS = ['Parsing clinical notes…','Analyzing diagnosis history…','Reviewing medication profile…','Assessing cognitive indicators…','Evaluating risk factors…','Generating dementia risk model…','Finalizing report…'];
+const STEPS = ['Parsing clinical notes…','Analyzing diagnosis history…','Reviewing medication profile…','Assessing cognitive indicators…','Evaluating vascular risk factors…','Running XGBoost classifier…','Generating clinical report…'];
 
 function renderList(list) {
   const el = document.getElementById('ptList');
@@ -885,7 +725,7 @@ function renderList(list) {
         <span>${p.mrn} · ${p.age}y ${p.sex[0]}</span>
         <span class="risk-pill ${rC[p.riskPrior]}">${rL[p.riskPrior]}</span>
       </div>
-      <div style="font-family:'Open Sans',sans-serif;font-size:10px;color:var(--ink4);margin-top:3px;">${p.appt}</div>
+      <div style="font-size:10px;color:var(--ink4);margin-top:3px;">${p.appt}</div>
     `;
     el.appendChild(d);
   });
@@ -969,7 +809,6 @@ function switchTabById(name) {
 }
 
 function startAnalysis() {
-  // Reset state
   document.getElementById('nnLoad').classList.add('on');
   document.getElementById('nnResult').classList.remove('on');
   document.getElementById('nnResult').innerHTML = '';
@@ -989,12 +828,13 @@ function startAnalysis() {
 function showResult() {
   const p = PATIENTS.find(x => x.id === activePt);
   const a = p.analysis;
-
   const isDetected = a.level === 'detected';
+
   const verdictText = isDetected
     ? 'Potential Dementia Indicators Detected'
-    : 'No Potential Dementia Indicators Spotted';
+    : 'No Dementia Indicators Detected';
   const icon = isDetected ? '⚠' : '✓';
+  const confColor = isDetected ? 'var(--rose)' : 'var(--sage)';
 
   const res = document.getElementById('nnResult');
   res.innerHTML = `
@@ -1002,21 +842,39 @@ function showResult() {
       <div class="indicator-inner ${a.level}">
         <div class="indicator-icon">${icon}</div>
         <div class="indicator-text-block">
-          <div class="indicator-label">Analysis Result</div>
+          <div class="indicator-label">Model Output</div>
           <div class="indicator-verdict">${verdictText}</div>
         </div>
       </div>
+      <div class="confidence-row">
+        <span class="conf-label">Model confidence</span>
+        <div class="conf-bar-wrap">
+          <div class="conf-bar ${a.level}" style="width:0%" id="confBar"></div>
+        </div>
+        <span class="conf-pct" style="color:${confColor}">${a.confidence}%</span>
+      </div>
     </div>
-    <div class="nn-section-label">Contributing Factors</div>
-    <div class="factors-box fade-up">${a.factorsText}</div>
-    <div class="nn-section-label">Clinical Recommendation</div>
-    <div class="rec-box fade-up">
+
+    <div class="nn-section-label fade-up-2">Contributing Factors</div>
+    <div class="factors-box fade-up-2">${a.factorsText}</div>
+
+    <div class="nn-section-label fade-up-3">Clinical Recommendation</div>
+    <div class="rec-box fade-up-3">
       <div class="rec-label">NeuroNote Recommendation</div>
       <div class="rec-text">${a.recommendation}</div>
     </div>
+
+    <p class="disclaimer fade-up-3">NeuroNote is a clinical decision support tool only. Results are not a diagnosis. All findings must be reviewed and interpreted by a qualified clinician.</p>
+
     <button class="rerun-btn" onclick="startAnalysis()">↺ Rerun Analysis</button>
   `;
   res.classList.add('on');
+
+  // Animate confidence bar after render
+  setTimeout(() => {
+    const bar = document.getElementById('confBar');
+    if (bar) bar.style.width = a.confidence + '%';
+  }, 100);
 }
 
 renderList(PATIENTS);
