@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -466,50 +466,6 @@ header {
 .nn-body::-webkit-scrollbar { width: 3px; }
 .nn-body::-webkit-scrollbar-thumb { background: var(--rule); }
 
-.nn-idle {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 16px;
-}
-
-.nn-idle-glyph {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 52px;
-  font-style: italic;
-  color: var(--ink5);
-  line-height: 1;
-}
-
-.nn-idle-text {
-  font-size: 13px;
-  color: var(--ink4);
-  line-height: 1.7;
-  max-width: 260px;
-}
-
-.btn-run {
-  margin-top: 4px;
-  background: var(--teal);
-  color: #fff;
-  border: none;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.5px;
-  padding: 11px 28px;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 0.15s;
-  width: 100%;
-  text-transform: uppercase;
-}
-
-.btn-run:hover { background: var(--teal-mid); }
-.btn-run:disabled { opacity: 0.4; cursor: not-allowed; }
-
 .nn-loading {
   display: none;
   flex: 1;
@@ -539,25 +495,40 @@ header {
 .nn-result { display: none; }
 .nn-result.on { display: block; }
 
-.result-score-block {
-  border: 1px solid var(--rule);
+/* Indicator banner — replaces the old score block */
+.indicator-banner {
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 16px;
+  border: 1px solid var(--rule);
 }
 
-.score-banner {
+.indicator-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 14px 18px;
+  gap: 14px;
+  padding: 18px 20px;
 }
 
-.score-banner.high { background: var(--rose-lt); border-bottom: 1px solid #f0c0c5; }
-.score-banner.mod  { background: var(--amber-lt); border-bottom: 1px solid #f0d0a0; }
-.score-banner.low  { background: var(--sage-lt); border-bottom: 1px solid #b0d8b8; }
+.indicator-inner.detected {
+  background: var(--rose-lt);
+  border-bottom: 1px solid #f0c0c5;
+}
 
-.score-label {
+.indicator-inner.clear {
+  background: var(--sage-lt);
+  border-bottom: 1px solid #b0d8b8;
+}
+
+.indicator-icon {
+  font-size: 28px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.indicator-text-block { flex: 1; }
+
+.indicator-label {
   font-family: 'Open Sans', sans-serif;
   font-size: 9px;
   letter-spacing: 1.5px;
@@ -565,32 +536,18 @@ header {
   margin-bottom: 4px;
 }
 
-.score-banner.high .score-label { color: var(--rose); }
-.score-banner.mod  .score-label { color: var(--amber); }
-.score-banner.low  .score-label { color: var(--sage); }
+.indicator-inner.detected .indicator-label { color: var(--rose); }
+.indicator-inner.clear    .indicator-label { color: var(--sage); }
 
-.score-level {
+.indicator-verdict {
   font-family: 'Open Sans', sans-serif;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 700;
+  line-height: 1.3;
 }
 
-.score-banner.high .score-level { color: var(--rose); }
-.score-banner.mod  .score-level { color: var(--amber); }
-.score-banner.low  .score-level { color: var(--sage); }
-
-.score-number {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 52px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.score-banner.high .score-number { color: var(--rose); }
-.score-banner.mod  .score-number { color: var(--amber); }
-.score-banner.low  .score-number { color: var(--sage); }
-
-.score-denom { font-size: 16px; opacity: 0.4; }
+.indicator-inner.detected .indicator-verdict { color: var(--rose); }
+.indicator-inner.clear    .indicator-verdict { color: var(--sage); }
 
 .nn-section-label {
   font-family: 'Open Sans', sans-serif;
@@ -722,11 +679,6 @@ header {
             <div class="nn-sub">Dementia Risk Prediction Plugin</div>
           </div>
           <div class="nn-body" id="nnBody">
-            <div class="nn-idle" id="nnIdle">
-              <div class="nn-idle-glyph">Rₓ</div>
-              <div class="nn-idle-text">Analyze this patient's complete EHR history to generate a dementia risk score, key contributing factors, and clinical recommendation.</div>
-              <button class="btn-run" id="runBtn" onclick="runAnalysis()">Run Analysis</button>
-            </div>
             <div class="nn-loading" id="nnLoad">
               <div class="loader-ring"></div>
               <div class="load-label">Analyzing patient record</div>
@@ -770,7 +722,7 @@ const PATIENTS = [
       {date:"Mar 14, 2024",provider:"Dr. S. Okonkwo",body:"Annual cognitive assessment. MMSE 26/30. Patient endorses mild short-term memory lapses, particularly with names. Neurological exam unremarkable. MRI February 2024 shows mild hippocampal atrophy bilaterally, consistent with age-related change vs. early MCI. Discussed findings with patient and daughter. Initiated donepezil trial after shared decision-making."},
     ],
     analysis:{
-      score:78, level:"high",
+      level:"detected",
       factorsText:`• Mild Cognitive Impairment (Formal Dx, G31.84): MMSE declined 26→22 over 18 months — a 4-point drop strongly associated with 60–80% conversion risk to Alzheimer's-type dementia. Functional decline in navigation and word-finding confirms progression beyond normal aging.
 
 • Neuroimaging — Bilateral Hippocampal Atrophy: MRI (Feb 2024) demonstrates bilateral hippocampal volume loss, a primary structural biomarker for Alzheimer's pathology and one of the most reliable predictors of dementia conversion in MCI patients.
@@ -808,7 +760,7 @@ const PATIENTS = [
       {date:"Oct 8, 2025",provider:"Dr. L. Park",body:"Annual wellness visit. BP 148/92 — elevated. HbA1c 7.8% — Jardiance added to regimen. Patient reports occasional brain fog and fatigue. Referred to Neurology for cognitive evaluation."},
     ],
     analysis:{
-      score:42, level:"mod",
+      level:"detected",
       factorsText:`• Poorly Controlled Vascular Risk Factors: BP 148/92 (target <130/80) combined with T2DM (HbA1c 7.8%) and hyperlipidemia constitutes a high vascular burden significantly associated with vascular dementia and mixed-etiology cognitive decline. This is the primary modifiable driver of risk in this patient.
 
 • Obstructive Sleep Apnea — Poor CPAP Compliance: OSA with inadequate treatment causes chronic nocturnal hypoxia and neuroinflammation. Poor CPAP adherence removes the primary protective intervention. OSA independently elevates dementia risk ~1.7x in longitudinal studies.
@@ -816,7 +768,7 @@ const PATIENTS = [
 • Subjective Cognitive Complaints with Borderline Screening Scores: MMSE 28/30 and MoCA 25/30 are within range but below age-expected norms. Work-related functional decline (missed meetings, name retrieval difficulty) represents a clinically meaningful change from baseline.
 
 • Age (73): Approaching the peak incidence threshold. Elevated monitoring is indicated even without structural or biomarker evidence of neurodegeneration at this time.`,
-      recommendation:"Moderate risk. Aggressively optimize vascular risk factors — BP target <130/80, HbA1c target <7%. Improve CPAP adherence urgently; consider auto-CPAP or BIPAP. Repeat cognitive assessment in 3 months alongside MRI results. Lifestyle counseling for aerobic exercise and Mediterranean diet."
+      recommendation:"Potential indicators present. Aggressively optimize vascular risk factors — BP target <130/80, HbA1c target <7%. Improve CPAP adherence urgently; consider auto-CPAP or BIPAP. Repeat cognitive assessment in 3 months alongside MRI results. Lifestyle counseling for aerobic exercise and Mediterranean diet."
     }
   },
   {
@@ -839,7 +791,7 @@ const PATIENTS = [
       {date:"Feb 1, 2026",provider:"Dr. S. Okonkwo",body:"Patient self-referred after reading about family history risk. Her mother had Alzheimer's dementia with onset around age 70. Patient is cognitively intact at baseline — MMSE 30/30, MoCA 28/30. No functional deficits. Discussed family history, genetic counseling options, and preventive lifestyle measures. Plan: repeat cognitive screen annually. No further workup indicated at this time."},
     ],
     analysis:{
-      score:18, level:"low",
+      level:"clear",
       factorsText:`• First-Degree Family History of Alzheimer's Dementia: Mother with Alzheimer's onset ~70 confers approximately 2–3x elevated lifetime risk compared to the general population. The APOE ε4 genotype (not yet tested) could modify this risk substantially if present.
 
 • Chronic Anxiety Disorder (GAD, Longstanding): Chronic psychological stress contributes modestly to cognitive risk through sustained cortisol elevation and hippocampal volume changes over time. Currently mitigated by pharmacotherapy (escitalopram).
@@ -847,7 +799,7 @@ const PATIENTS = [
 • Migraines with Aura: Emerging evidence suggests a marginal association between aura migraines and elevated cerebrovascular risk. Clinical significance in isolation is uncertain and low.
 
 • Current Cognitive Baseline — Fully Intact: MMSE 30/30 and MoCA 28/30 provide strong reassurance. No functional complaints. No structural imaging concerns documented. Risk at this time is driven entirely by non-modifiable family history, not current clinical findings.`,
-      recommendation:"Low risk. No intervention warranted currently. Recommend annual cognitive screening, aerobic exercise (150 min/week minimum), Mediterranean-style diet, and adequate sleep hygiene. Offer genetic counseling referral for APOE testing given strong family history. Reassess in 12 months or if new symptoms emerge."
+      recommendation:"No active indicators at this time. Recommend annual cognitive screening, aerobic exercise (150 min/week minimum), Mediterranean-style diet, and adequate sleep hygiene. Offer genetic counseling referral for APOE testing given strong family history. Reassess in 12 months or if new symptoms emerge."
     }
   },
   {
@@ -870,7 +822,7 @@ const PATIENTS = [
       {date:"Feb 14, 2026",provider:"Dr. S. Okonkwo",body:"PD follow-up. Motor control relatively stable on current regimen; mild bradykinesia noted on exam. Patient and wife report vivid, disturbing dreams and some confusion in the evenings — possible Lewy body overlap vs. medication effect. MMSE 24/30, down from 27 eighteen months ago. DaTSCAN ordered. Medication timing adjusted to minimize evening confusion. Cognitive trajectory discussed openly with family."},
     ],
     analysis:{
-      score:64, level:"mod",
+      level:"detected",
       factorsText:`• Parkinson's Disease (Primary Dx): PD patients face substantially elevated risk for Parkinson's Disease Dementia (PDD) and Lewy Body Dementia (LBD). Approximately 80% of PD patients will develop dementia within 20 years of motor symptom onset — this is the dominant risk signal in this patient.
 
 • Accelerating Cognitive Decline: MMSE declined 27→24 in 18 months — a rate significantly exceeding normal aging and suggesting early cognitive compromise beyond what would be expected from PD motor symptoms alone.
@@ -880,7 +832,7 @@ const PATIENTS = [
 • Evening Confusion / Possible Sundowning: Confusion in the evenings is a recognized early neuropsychiatric feature of dementia with Lewy bodies. Medication-related contribution (dopaminergic) is possible but the pattern warrants close monitoring.
 
 • Hypertension: Adds modest additive vascular risk on top of the primary neurodegenerative picture.`,
-      recommendation:"Elevated risk in the context of PD. DaTSCAN has been ordered. Urgent referral to PD-specialist memory program and neuropsychological evaluation. Review all medications for anticholinergic burden. Discuss PDD/LBD risk trajectory openly with patient and family. Initiate advance care planning. Safety assessment for driving."
+      recommendation:"Potential indicators present. DaTSCAN has been ordered. Urgent referral to PD-specialist memory program and neuropsychological evaluation. Review all medications for anticholinergic burden. Discuss PDD/LBD risk trajectory openly with patient and family. Initiate advance care planning. Safety assessment for driving."
     }
   },
   {
@@ -901,7 +853,7 @@ const PATIENTS = [
       {date:"Jan 15, 2026",provider:"Dr. S. Okonkwo",body:"New evaluation for cognitive concerns — fatigue, memory lapses, and slowed thinking over 8 months. TSH was elevated at 8.2 on PCP visit, now corrected to 2.8 after levothyroxine dose increase. B12 was critically low at 142 pg/mL — now receiving monthly IM injections. MMSE today 27/30. Following correction of metabolic causes, will repeat MMSE in 3 months. Cognitive symptoms likely largely attributable to reversible metabolic causes."},
     ],
     analysis:{
-      score:12, level:"low",
+      level:"clear",
       factorsText:`• Reversible Metabolic Etiologies — Under Active Treatment: Hypothyroidism (TSH 8.2 at presentation, now 2.8 post-adjustment) and critical B12 deficiency (142 pg/mL, now receiving monthly IM supplementation) are the most plausible primary causes of this patient's cognitive symptoms. Both are fully reversible and expected to produce significant improvement within 3–6 months.
 
 • Subjective Cognitive Complaints with Modest Objective Deficit: MMSE 27/30 is within normal limits but mildly below age expectation. Current level of deficit is consistent with metabolic etiology rather than primary neurodegeneration.
@@ -909,13 +861,12 @@ const PATIENTS = [
 • Age (70): Baseline monitoring warranted given age, but no structural or biomarker evidence of neurodegeneration has been identified.
 
 • No Primary Risk Factors Identified: No family history of dementia documented, no MCI diagnosis, no neuroimaging abnormalities, no significant vascular risk burden, no sleep disorder. Net baseline dementia risk is low.`,
-      recommendation:"Likely low dementia risk — current cognitive symptoms most plausibly explained by correctable metabolic etiologies (hypothyroidism + B12 deficiency). Repeat MMSE in 3 months post-treatment. If cognition normalizes, transition to routine annual screening. If decline persists despite metabolic correction, escalate workup with brain MRI and full neuropsychological testing."
+      recommendation:"No active indicators at this time — current cognitive symptoms most plausibly explained by correctable metabolic etiologies (hypothyroidism + B12 deficiency). Repeat MMSE in 3 months post-treatment. If cognition normalizes, transition to routine annual screening. If decline persists despite metabolic correction, escalate workup with brain MRI and full neuropsychological testing."
     }
   }
 ];
 
 let activePt = null;
-let analyzing = false;
 const STEPS = ['Parsing clinical notes…','Analyzing diagnosis history…','Reviewing medication profile…','Assessing cognitive indicators…','Evaluating risk factors…','Generating dementia risk model…','Finalizing report…'];
 
 function renderList(list) {
@@ -993,8 +944,8 @@ function openPt(id) {
     </div>
   `).join('');
 
-  resetNN();
   switchTabById('demo');
+  startAnalysis();
 }
 
 function dr(k,v) {
@@ -1017,69 +968,55 @@ function switchTabById(name) {
   document.getElementById('tp-'+name).classList.add('on');
 }
 
-function resetNN() {
-  document.getElementById('nnIdle').style.display = 'flex';
-  document.getElementById('nnLoad').classList.remove('on');
+function startAnalysis() {
+  // Reset state
+  document.getElementById('nnLoad').classList.add('on');
   document.getElementById('nnResult').classList.remove('on');
   document.getElementById('nnResult').innerHTML = '';
-  document.getElementById('runBtn').disabled = false;
-  analyzing = false;
-}
-
-function runAnalysis() {
-  if (analyzing) return;
-  analyzing = true;
-  document.getElementById('runBtn').disabled = true;
-  document.getElementById('nnIdle').style.display = 'none';
-  document.getElementById('nnLoad').classList.add('on');
 
   let s = 0;
   const stepEl = document.getElementById('loadStep');
+  stepEl.textContent = STEPS[0];
   const iv = setInterval(() => { stepEl.textContent = STEPS[s++ % STEPS.length]; }, 430);
 
   setTimeout(() => {
     clearInterval(iv);
     document.getElementById('nnLoad').classList.remove('on');
     showResult();
-    analyzing = false;
-  }, 3200);
+  }, 3000);
 }
 
 function showResult() {
   const p = PATIENTS.find(x => x.id === activePt);
   const a = p.analysis;
-  const lvlMap = {high:'High Risk',mod:'Moderate Risk',low:'Low Risk'};
+
+  const isDetected = a.level === 'detected';
+  const verdictText = isDetected
+    ? 'Potential Dementia Indicators Detected'
+    : 'No Potential Dementia Indicators Spotted';
+  const icon = isDetected ? '⚠' : '✓';
 
   const res = document.getElementById('nnResult');
   res.innerHTML = `
-    <div class="result-score-block fade-up">
-      <div class="score-banner ${a.level}">
-        <div>
-          <div class="score-label">Dementia Risk Score</div>
-          <div class="score-level">${lvlMap[a.level]}</div>
+    <div class="indicator-banner fade-up">
+      <div class="indicator-inner ${a.level}">
+        <div class="indicator-icon">${icon}</div>
+        <div class="indicator-text-block">
+          <div class="indicator-label">Analysis Result</div>
+          <div class="indicator-verdict">${verdictText}</div>
         </div>
-        <div class="score-number">${a.score}<span class="score-denom">/100</span></div>
       </div>
     </div>
-    <div class="nn-section-label">Contributing Risk Factors</div>
+    <div class="nn-section-label">Contributing Factors</div>
     <div class="factors-box fade-up">${a.factorsText}</div>
     <div class="nn-section-label">Clinical Recommendation</div>
     <div class="rec-box fade-up">
       <div class="rec-label">NeuroNote Recommendation</div>
       <div class="rec-text">${a.recommendation}</div>
     </div>
-    <button class="rerun-btn" onclick="resetNN()">↺ Rerun Analysis</button>
+    <button class="rerun-btn" onclick="startAnalysis()">↺ Rerun Analysis</button>
   `;
   res.classList.add('on');
-
-  const rL = {high:'HIGH',mod:'MOD',low:'LOW'};
-  const rC = {high:'rp-high',mod:'rp-mod',low:'rp-low'};
-  const ptRow = document.getElementById('pt-'+activePt);
-  if (ptRow) {
-    const pill = ptRow.querySelector('.risk-pill');
-    if (pill) { pill.className='risk-pill '+rC[a.level]; pill.textContent=rL[a.level]; }
-  }
-  p.riskPrior = a.level;
 }
 
 renderList(PATIENTS);
